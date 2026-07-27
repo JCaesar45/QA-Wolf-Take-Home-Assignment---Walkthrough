@@ -1,5 +1,3 @@
-# 🐺 QA Wolf Take Home Assignment
-
 Welcome to the QA Wolf take home assignment for our [QA Engineer](https://www.task-wolf.com/apply-qae) role! We appreciate your interest and look forward to seeing what you come up with.
 
 ## Instructions
@@ -57,3 +55,21 @@ While the assignment has clear requirements, we encourage applicants to treat it
 There's no "right" answer—we're curious to see what you choose to do when given freedom and ambiguity. In a world where tools can help generate working code quickly and make it easier than ever to complete technical take-homes, we value originality and intentionality. If that resonates with you, use this assignment as a chance to show us how you think.
 
 Applicants who approach the assignment as a creative challenge, not just a checklist, tend to perform best in our process.
+
+# Hacker News Newest Sort Validation
+
+## Overview
+This repository contains implementations of an algorithm to validate that the first 100 articles on Hacker News `/newest` are sorted in descending chronological order (newest to oldest). Implementations are provided in HTML, CSS, JavaScript, Python, TypeScript, and Java.
+
+## Execution
+- **HTML/CSS/JS**: Open `index.html` in a modern web browser and click the validation button.
+- **Python**: Requires `aiohttp`. Execute via `python validate.py`.
+- **TypeScript**: Requires Node.js 18+. Execute via `npx ts-node validate.ts`.
+- **Java**: Requires Java 11+ and Jackson Databind. Compile and execute `HackerNewsValidator.java`.
+
+## Algorithm
+1. Fetch the array of new story IDs from the Firebase API.
+2. Isolate the first 100 IDs.
+3. Concurrently fetch the metadata for each ID to extract the Unix timestamp.
+4. Iterate through the timestamps to verify `timestamp[i] <= timestamp[i-1]`.
+5. Return success or failure based on the validation loop.
