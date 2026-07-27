@@ -1,161 +1,59 @@
-# QA Wolf Take Home Assignment - Walkthrough
+# 🐺 QA Wolf Take Home Assignment
 
-## Overview of the Solution
+Welcome to the QA Wolf take home assignment for our [QA Engineer](https://www.task-wolf.com/apply-qae) role! We appreciate your interest and look forward to seeing what you come up with.
 
-I've created a Playwright automation script that validates the sorting order of the first 100 articles on Hacker News' "newest" page. Let me walk you through how it works.
+## Instructions
 
-## Code Walkthrough
+This assignment has two questions as outlined below. When you are done, upload your assignment to our [application page](https://www.task-wolf.com/apply-qae):
 
-### 1. **Setup & Configuration**
-```javascript
-const { chromium } = require("playwright");
-```
-- Uses Playwright's Chromium browser for automation
-- The script is designed to run in headless mode for efficiency
 
-### 2. **The Main Function: `sortHackerNewsArticles()`**
+### Question 1
 
-#### **Browser Launch**
-```javascript
-const browser = await chromium.launch({
-  headless: true,
-});
-```
-- Launches Chromium in headless mode (no UI visible)
-- Creates a new browser context and page for isolated testing
+In this assignment, you will create a script on [Hacker News](https://news.ycombinator.com/) using JavaScript and Microsoft's [Playwright](https://playwright.dev/) framework. 
 
-#### **Navigation**
-```javascript
-await page.goto("https://news.ycombinator.com/newest", {
-  waitUntil: "domcontentloaded",
-});
-```
-- Navigates to Hacker News' newest articles page
-- Waits for DOM content to load before proceeding
+1. Install node modules by running `npm i`.
 
-#### **Pagination Logic**
-```javascript
-while (timestamps.length < 100) {
-  await page.waitForSelector("tr.athing");
-  // ... collect timestamps ...
-  
-  if (timestamps.length >= 100) break;
-  
-  const moreLink = page.locator("a.morelink");
-  if (!(await moreLink.count())) break;
-  
-  await Promise.all([
-    page.waitForLoadState("domcontentloaded"),
-    moreLink.click(),
-  ]);
-}
-```
-- Continuously loads pages until we have 100 articles
-- Checks for "More" link existence before clicking
-- Uses `Promise.all` for efficient page loading
+2. Edit the `index.js` file in this project to go to [Hacker News/newest](https://news.ycombinator.com/newest) and validate that EXACTLY the first 100 articles are sorted from newest to oldest. You can run your script with the `node index.js` command.
 
-#### **Timestamp Collection**
-```javascript
-const pageTimestamps = await page.$$eval("span.age", (elements) =>
-  elements.map((element) => Number(element.getAttribute("title").split(" ")[0]))
-);
-```
-- Selects all `span.age` elements on the page
-- Extracts the Unix timestamp from the `title` attribute
-- Converts to numbers for comparison
+Note that you are welcome to update Playwright or install other packages as you see fit, however you must utilize Playwright in this assignment.
 
-#### **Sorting Validation**
-```javascript
-for (let i = 1; i < first100.length; i++) {
-  if (first100[i] > first100[i - 1]) {
-    throw new Error(
-      `Articles are not sorted correctly at positions ${i} and ${i + 1}.`
-    );
-  }
-}
-```
-- Compares each article's timestamp with the previous one
-- Newest articles have larger Unix timestamps, so they should be decreasing
-- Throws a descriptive error if sorting is incorrect
+### Question 2
 
-### 3. **Error Handling**
-```javascript
-(async () => {
-  try {
-    await sortHackerNewsArticles();
-  } catch (error) {
-    console.error("❌ Validation failed:");
-    console.error(error);
-    process.exit(1);
-  }
-})();
-```
-- Wraps execution in a try-catch block
-- Provides clear success/failure messages
-- Exits with appropriate error codes
+Why do you want to work at QA Wolf? Please record a short, ~2 min video using [Loom](https://www.loom.com/) that includes:
 
-## Key Features
+1. Your answer 
 
-### ✅ **What the Script Does Well:**
-1. **Robust Pagination**: Handles multi-page navigation correctly
-2. **Accurate Data Extraction**: Uses proper selectors for Hacker News structure
-3. **Clear Validation**: Checks exact sorting order with descriptive error messages
-4. **Error Handling**: Graceful failure with meaningful feedback
-5. **Efficient Execution**: Uses headless mode and Promise.all for performance
+2. A walk-through demonstration of your code, showing a successful execution
 
-### 🔧 **Technical Decisions:**
-- **Headless Mode**: Reduces resource usage and speeds up execution
-- **DOM Content Load**: Balances speed with reliability
-- **Batch Collection**: Gathers all timestamps from each page at once
-- **Explicit Wait**: Ensures elements are loaded before interaction
+The answer and walkthrough should be combined into *one* video, and must be recorded using Loom as the submission page only accepts Loom links.
 
-## How to Run
+## Frequently Asked Questions
 
-```bash
-# Install dependencies
-npm i
+### What is your hiring process? When will I hear about next steps?
 
-# Run the script
-node index.js
-```
+This take home assignment is the first step in our hiring process, followed by a final round interview if it goes well. **We review every take home assignment submission and promise to get back to you either way within two weeks (usually sooner).** The only caveat is if we are out of the office, in which case we will get back to you when we return. If it has been more than two weeks and you have not heard from us, please do follow up.
 
-## Expected Output
+The final round interview is a 2-hour technical work session that reflects what it is like to work here. We provide a $150 stipend for your time for the final round interview regardless of how it goes. After that, there may be a short chat with our director about your experience and the role.
 
-**Success:**
-```
-✅ Success! The first 100 articles are sorted from newest to oldest.
-```
+Our hiring process is rolling where we review candidates until we have filled our openings. If there are no openings left, we will keep your contact information on file and reach out when we are hiring again.
 
-**Failure:**
-```
-❌ Validation failed:
-Error: Articles are not sorted correctly at positions X and Y.
-```
+### Having trouble uploading your assignment?
+Be sure to delete your `node_modules` file, then zip your assignment folder prior to upload. 
 
-## Why This Approach?
+### How do you decide who to hire?
 
-1. **Simplicity**: The script focuses on one clear task - validation
-2. **Reliability**: Uses Playwright's robust selectors and waiting mechanisms
-3. **Maintainability**: Clean code structure with clear variable names
-4. **Error Visibility**: Clear success/failure messages for CI/CD integration
+We evaluate candidates based on three criteria:
 
-## Potential Improvements
+- Technical ability (as demonstrated in the take home and final round)
+- Customer service orientation (as this role is customer facing)
+- Alignment with our mission and values (captured [here](https://qawolf.notion.site/Mission-and-Values-859c7d0411ba41349e1b318f4e7abc8f))
 
-If I were to extend this solution:
+This means whether we hire you is based on how you do during our interview process, not on your previous experience (or lack thereof). Note that you will also need to pass a background check to work here as our customers require this.
 
-1. **Reporting**: Add detailed HTML/JSON reporting
-2. **Retry Logic**: Implement retry mechanisms for flaky elements
-3. **Configuration**: Make the article count configurable
-4. **Multiple Browsers**: Test across different browsers
-5. **Screenshots**: Capture screenshots on failure for debugging
+### How can I help my application stand out?
 
-## Video Demonstration Points
+While the assignment has clear requirements, we encourage applicants to treat it as more than a checklist. If you're genuinely excited about QA Wolf, consider going a step further—whether that means building a simple user interface, adding detailed error handling or reporting, improving the structure of the script, or anything else that showcases your unique perspective.
 
-In my Loom video, I would demonstrate:
+There's no "right" answer—we're curious to see what you choose to do when given freedom and ambiguity. In a world where tools can help generate working code quickly and make it easier than ever to complete technical take-homes, we value originality and intentionality. If that resonates with you, use this assignment as a chance to show us how you think.
 
-1. **Code Overview**: Walk through the main function and its parts
-2. **Execution**: Show the script running successfully
-3. **Edge Cases**: Discuss what happens when there aren't enough articles
-4. **Error Scenarios**: Show how the script handles failures
-
----
+Applicants who approach the assignment as a creative challenge, not just a checklist, tend to perform best in our process.
